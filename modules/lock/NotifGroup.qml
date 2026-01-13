@@ -194,7 +194,7 @@ StyledRect {
 
             Repeater {
                 model: ScriptModel {
-                    values: root.notifs.slice(0, Config.notifs.groupPreviewNum)
+                    values: root.notifs.slice(0, 1)
                 }
 
                 NotifLine {
@@ -256,7 +256,7 @@ StyledRect {
                 sourceComponent: ColumnLayout {
                     Repeater {
                         model: ScriptModel {
-                            values: root.notifs.slice(Config.notifs.groupPreviewNum)
+                            values: root.notifs.slice(0, 1)
                         }
 
                         NotifLine {}
@@ -284,20 +284,6 @@ StyledRect {
 
         Layout.fillWidth: true
         textFormat: Text.MarkdownText
-        text: {
-            const summary = modelData.summary.replace(/\n/g, " ");
-            const body = modelData.body.replace(/\n/g, " ");
-            const colour = root.urgency === "critical" ? Colours.palette.m3secondary : Colours.palette.m3outline;
-
-            if (metrics.text === metrics.elidedText)
-                return `${summary} <span style='color:${colour}'>${body}</span>`;
-
-            const t = metrics.elidedText.length - 3;
-            if (t < summary.length)
-                return `${summary.slice(0, t)}...`;
-
-            return `${summary} <span style='color:${colour}'>${body.slice(0, t - summary.length)}...</span>`;
-        }
         color: root.urgency === "critical" ? Colours.palette.m3onSecondaryContainer : Colours.palette.m3onSurface
 
         Component.onCompleted: modelData.lock(this)
@@ -306,7 +292,6 @@ StyledRect {
         TextMetrics {
             id: metrics
 
-            text: `${notifLine.modelData.summary} ${notifLine.modelData.body}`.replace(/\n/g, " ")
             font.pointSize: notifLine.font.pointSize
             font.family: notifLine.font.family
             elideWidth: notifLine.width
